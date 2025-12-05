@@ -27,6 +27,8 @@ func NewDB() *gorm.DB {
 		&domain.ChapterImage{},
 		&domain.TextLayer{},
 		&domain.Translation{},
+		&domain.Tag{},
+		&domain.TagTranslation{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate database: ", err)

@@ -20,7 +20,7 @@ func (r *comicRepository) CreateSeries(series *domain.Series) error {
 
 func (r *comicRepository) GetSeriesByID(id uuid.UUID) (*domain.Series, error) {
 	var series domain.Series
-	err := r.db.Preload("Seasons.Chapters").First(&series, id).Error
+	err := r.db.Preload("Seasons.Chapters").Preload("Tags.Translations").First(&series, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (r *comicRepository) GetChapterByID(id uuid.UUID) (*domain.Chapter, error) 
 func (r *comicRepository) ListSeries() ([]domain.Series, error) {
 	var series []domain.Series
 	// Limit to 20 for now, order by updated_at desc
-	err := r.db.Order("updated_at desc").Limit(20).Find(&series).Error
+	err := r.db.Preload("Tags.Translations").Order("updated_at desc").Limit(20).Find(&series).Error
 	if err != nil {
 		return nil, err
 	}

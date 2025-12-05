@@ -49,27 +49,42 @@ func (m *MultilingualText) Scan(value interface{}) error {
 }
 
 type Series struct {
-	ID                  uuid.UUID          `gorm:"type:uuid;primary_key;" json:"id"`
-	CreatorID           uuid.UUID          `gorm:"type:uuid;not null" json:"creator_id"`
-	Title               MultilingualText   `gorm:"type:jsonb;serializer:json" json:"title"`
-	Subtitle            MultilingualText   `gorm:"type:jsonb;serializer:json" json:"subtitle"`
-	Description         MultilingualText   `gorm:"type:jsonb;serializer:json" json:"description"`
-	Author              string             `json:"author"`
-	Genres              pq.StringArray     `gorm:"type:text[]" json:"genres"`
-	Tags                []MultilingualText `gorm:"type:jsonb;serializer:json" json:"tags"`
-	ThumbnailURL        string             `json:"thumbnail_url"`
-	CoverImageURL       string             `json:"cover_image_url"`
-	BannerImageURL      string             `json:"banner_image_url"`
-	Status              SeriesStatus       `gorm:"default:'draft'" json:"status"`
-	Visibility          string             `gorm:"default:'public'" json:"visibility"`
-	NSFW                bool               `gorm:"default:false" json:"nsfw"`
-	SchedulePublishAt   *time.Time         `json:"schedule_publish_at"`
-	MonetizationEnabled bool               `gorm:"default:false" json:"monetization_enabled"`
-	MonetizationType    string             `json:"monetization_type"`
-	DefaultUnlockType   string             `json:"default_unlock_type"`
-	CreatedAt           time.Time          `json:"created_at"`
-	UpdatedAt           time.Time          `json:"updated_at"`
-	Seasons             []Season           `json:"seasons,omitempty"`
+	ID                  uuid.UUID        `gorm:"type:uuid;primary_key;" json:"id"`
+	CreatorID           uuid.UUID        `gorm:"type:uuid;not null" json:"creator_id"`
+	Title               MultilingualText `gorm:"type:jsonb;serializer:json" json:"title"`
+	Subtitle            MultilingualText `gorm:"type:jsonb;serializer:json" json:"subtitle"`
+	Description         MultilingualText `gorm:"type:jsonb;serializer:json" json:"description"`
+	Author              string           `json:"author"`
+	Genres              pq.StringArray   `gorm:"type:text[]" json:"genres"`
+	Tags                []Tag            `gorm:"many2many:series_tags;" json:"tags"`
+	ThumbnailURL        string           `json:"thumbnail_url"`
+	CoverImageURL       string           `json:"cover_image_url"`
+	BannerImageURL      string           `json:"banner_image_url"`
+	Status              SeriesStatus     `gorm:"default:'draft'" json:"status"`
+	Visibility          string           `gorm:"default:'public'" json:"visibility"`
+	NSFW                bool             `gorm:"default:false" json:"nsfw"`
+	SchedulePublishAt   *time.Time       `json:"schedule_publish_at"`
+	MonetizationEnabled bool             `gorm:"default:false" json:"monetization_enabled"`
+	MonetizationType    string           `json:"monetization_type"`
+	DefaultUnlockType   string           `json:"default_unlock_type"`
+	CreatedAt           time.Time        `json:"created_at"`
+	UpdatedAt           time.Time        `json:"updated_at"`
+	Seasons             []Season         `json:"seasons,omitempty"`
+}
+
+type Tag struct {
+	ID           uuid.UUID        `gorm:"type:uuid;primary_key;" json:"id"`
+	Slug         string           `gorm:"uniqueIndex;not null" json:"slug"`
+	Translations []TagTranslation `json:"translations"`
+	CreatedAt    time.Time        `json:"created_at"`
+	UpdatedAt    time.Time        `json:"updated_at"`
+}
+
+type TagTranslation struct {
+	ID       uuid.UUID `gorm:"type:uuid;primary_key;" json:"id"`
+	TagID    uuid.UUID `gorm:"type:uuid;not null;index" json:"tag_id"`
+	Language string    `gorm:"not null;index" json:"language"` // en, th
+	Name     string    `gorm:"not null" json:"name"`
 }
 
 type Season struct {

@@ -1,21 +1,20 @@
 "use client";
 
-import { useState, useRef, useEffect, useTransition } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/context/auth-context";
 import { useAuthModal } from "@/context/auth-modal-context";
-import { Link, usePathname, useRouter } from "@/navigation";
-import { useTranslations, useLocale } from "next-intl";
+import Link from "@/components/link";
+import { useClientTranslation, useClientLocale } from "@/hooks/use-client-translation";
+import { useLocaleContext } from "@/context/locale-context";
 
 export default function Navbar() {
     const { user, logout } = useAuth();
     const { openModal } = useAuthModal();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const t = useTranslations('Navbar');
-    const pathname = usePathname();
-    const locale = useLocale();
-    const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const t = useClientTranslation('Navbar');
+    const locale = useClientLocale();
+    const { setLocale } = useLocaleContext();
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -29,11 +28,9 @@ export default function Navbar() {
         };
     }, []);
 
-    const handleLanguageChange = (newLocale: string) => {
+    const handleLanguageChange = (newLocale: 'en' | 'th') => {
+        setLocale(newLocale);
         setIsDropdownOpen(false);
-        startTransition(() => {
-            router.replace(pathname, { locale: newLocale });
-        });
     };
 
     return (
@@ -90,30 +87,17 @@ export default function Navbar() {
 
                                     {/* Language Switcher in Dropdown */}
                                     <div className="px-4 py-2 border-t border-gray-100 dark:border-gray-700">
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                                            Interface Language
-                                            {isPending && <span className="ml-2 text-indigo-600">⟳</span>}
-                                        </p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Interface Language</p>
                                         <div className="flex space-x-2">
                                             <button
                                                 onClick={() => handleLanguageChange('en')}
-                                                disabled={isPending}
-                                                className={`flex-1 px-2 py-1 text-xs rounded border text-center transition ${
-                                                    locale === 'en' 
-                                                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-medium' 
-                                                        : 'border-gray-200 text-gray-600 hover:bg-gray-50'
-                                                } ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                className={`flex-1 px-2 py-1 text-xs rounded border text-center ${locale === 'en' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-medium' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
                                             >
                                                 English
                                             </button>
                                             <button
                                                 onClick={() => handleLanguageChange('th')}
-                                                disabled={isPending}
-                                                className={`flex-1 px-2 py-1 text-xs rounded border text-center transition ${
-                                                    locale === 'th' 
-                                                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-medium' 
-                                                        : 'border-gray-200 text-gray-600 hover:bg-gray-50'
-                                                } ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                className={`flex-1 px-2 py-1 text-xs rounded border text-center ${locale === 'th' ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-medium' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
                                             >
                                                 ไทย
                                             </button>

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -14,6 +15,8 @@ import (
 )
 
 func main() {
+	os.WriteFile("server_status.txt", []byte("Server started\n"), 0644)
+	fmt.Println("Starting server...")
 	// Load .env file
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")

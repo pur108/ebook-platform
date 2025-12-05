@@ -16,8 +16,7 @@ import { AuthProvider } from "@/context/auth-context";
 import { AuthModalProvider } from "@/context/auth-modal-context";
 import AuthModal from "@/components/auth/auth-modal";
 
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { LocaleProvider } from "@/context/locale-context";
 import { notFound } from 'next/navigation';
 
 export default async function RootLayout({
@@ -34,23 +33,19 @@ export default async function RootLayout({
     notFound();
   }
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
-  const messages = await getMessages();
-
   return (
     <html lang={locale}>
       <body
         className={`${inter.variable} font-sans antialiased`}
       >
-        <NextIntlClientProvider messages={messages}>
+        <LocaleProvider initialLocale={locale as 'en' | 'th'}>
           <AuthProvider>
             <AuthModalProvider>
               {children}
               <AuthModal />
             </AuthModalProvider>
           </AuthProvider>
-        </NextIntlClientProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

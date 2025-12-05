@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Link } from "@/navigation";
+import Link from "@/components/link";
 import api from "@/lib/api";
-import { useLocale } from "next-intl";
+import { useClientLocale } from "@/hooks/use-client-translation";
 
 interface MultilingualText {
     en: string;
@@ -45,7 +45,7 @@ export default function SeriesDetailPage() {
     const { id } = useParams();
     const [series, setSeries] = useState<Series | null>(null);
     const [loading, setLoading] = useState(true);
-    const locale = useLocale();
+    const locale = useClientLocale();
 
     const getLocalizedText = (text: MultilingualText | string) => {
         if (typeof text === 'string') return text;
@@ -98,7 +98,7 @@ export default function SeriesDetailPage() {
 
             {/* Banner */}
             <div className="relative h-64 md:h-80 lg:h-96 w-full overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent z-10 opacity-80"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-gray-900 to-transparent z-10 opacity-80"></div>
                 <img
                     src={series.banner_image_url || series.cover_image_url}
                     alt="Banner"
@@ -109,7 +109,7 @@ export default function SeriesDetailPage() {
             <div className="max-w-6xl mx-auto px-6 -mt-32 relative z-20">
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Cover Image */}
-                    <div className="flex-shrink-0 mx-auto md:mx-0">
+                    <div className="shrink-0 mx-auto md:mx-0">
                         <img
                             src={series.cover_image_url}
                             alt={getLocalizedText(series.title)}
@@ -118,7 +118,7 @@ export default function SeriesDetailPage() {
                     </div>
 
                     {/* Info */}
-                    <div className="flex-grow pt-4 md:pt-32 text-center md:text-left">
+                    <div className="grow pt-4 md:pt-32 text-center md:text-left">
                         <h1 className="text-3xl md:text-4xl font-bold text-white md:text-gray-900 md:dark:text-white mt-4 mb-2 shadow-black md:shadow-none drop-shadow-md md:drop-shadow-none">
                             {getLocalizedText(series.title)}
                         </h1>
@@ -172,7 +172,7 @@ export default function SeriesDetailPage() {
                                                 <Link
                                                     key={chapter.id}
                                                     href={`/read/${chapter.id}`}
-                                                    className="block px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition flex justify-between items-center group"
+                                                    className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition flex justify-between items-center group"
                                                 >
                                                     <div className="flex items-center gap-4">
                                                         <span className="text-gray-400 font-mono w-8">#{chapter.chapter_number}</span>

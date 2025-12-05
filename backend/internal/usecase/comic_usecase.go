@@ -44,14 +44,14 @@ type CreateSeriesInput struct {
 
 func (u *comicUsecase) CreateSeries(input CreateSeriesInput) (*domain.Series, error) {
 	series := &domain.Series{
-		ID:                  uuid.New(),
-		CreatorID:           input.CreatorID,
-		Title:               input.Title,
-		Subtitle:            input.Subtitle,
-		Description:         input.Description,
-		Author:              input.Author,
-		Genres:              input.Genres,
-		Tags:                input.Tags,
+		ID:          uuid.New(),
+		CreatorID:   input.CreatorID,
+		Title:       input.Title,
+		Subtitle:    input.Subtitle,
+		Description: input.Description,
+		Author:      input.Author,
+		Genres:      input.Genres,
+
 		ThumbnailURL:        input.ThumbnailURL,
 		CoverImageURL:       input.CoverImageURL,
 		BannerImageURL:      input.BannerImageURL,
@@ -65,6 +65,35 @@ func (u *comicUsecase) CreateSeries(input CreateSeriesInput) (*domain.Series, er
 		CreatedAt:           time.Now(),
 		UpdatedAt:           time.Now(),
 	}
+
+	// Process Tags
+	var tags []domain.Tag
+	for _, t := range input.Tags {
+		tagID := uuid.New()
+		slug := t.En // Simple slug for now, ideally use a slug generator
+
+		tags = append(tags, domain.Tag{
+			ID:        tagID,
+			Slug:      slug,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+			Translations: []domain.TagTranslation{
+				{
+					ID:       uuid.New(),
+					TagID:    tagID,
+					Language: "en",
+					Name:     t.En,
+				},
+				{
+					ID:       uuid.New(),
+					TagID:    tagID,
+					Language: "th",
+					Name:     t.Th,
+				},
+			},
+		})
+	}
+	series.Tags = tags
 
 	if err := u.comicRepo.CreateSeries(series); err != nil {
 		return nil, err

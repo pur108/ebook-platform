@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "@/navigation";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import { useAuth } from "@/context/auth-context";
-import { useTranslations } from "next-intl";
+import { useClientTranslation, useClientLocale } from "@/hooks/use-client-translation";
 
 export default function PublishSeriesPage() {
     const router = useRouter();
     const { user, token } = useAuth();
-    const t = useTranslations('Series');
+    const t = useClientTranslation('Series');
+    const locale = useClientLocale();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [activeTab, setActiveTab] = useState<'en' | 'th'>('en');
@@ -130,7 +131,7 @@ export default function PublishSeriesPage() {
             }
 
             const data = await response.json();
-            router.push(`/series/${data.id}`);
+            router.push(`/${locale}/series/${data.id}`);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -171,9 +172,9 @@ export default function PublishSeriesPage() {
                                     <label className="block text-sm font-medium mb-1">{t('coverImage')}</label>
                                     <div className="flex flex-col items-center space-y-2">
                                         {formData.cover_image_url ? (
-                                            <img src={formData.cover_image_url} alt="Cover Preview" className="w-full aspect-[2/3] object-cover border" />
+                                            <img src={formData.cover_image_url} alt="Cover Preview" className="w-full aspect-2/3 object-cover border" />
                                         ) : (
-                                            <div className="w-full aspect-[2/3] bg-gray-100 dark:bg-gray-700 border flex items-center justify-center text-gray-400">
+                                            <div className="w-full aspect-2/3 bg-gray-100 dark:bg-gray-700 border flex items-center justify-center text-gray-400">
                                                 {t('noImage')}
                                             </div>
                                         )}
@@ -189,9 +190,9 @@ export default function PublishSeriesPage() {
                                     <label className="block text-sm font-medium mb-1">{t('bannerImage')}</label>
                                     <div className="flex flex-col items-center space-y-2">
                                         {formData.banner_image_url ? (
-                                            <img src={formData.banner_image_url} alt="Banner Preview" className="w-full aspect-[3/1] object-cover border" />
+                                            <img src={formData.banner_image_url} alt="Banner Preview" className="w-full aspect-3/1 object-cover border" />
                                         ) : (
-                                            <div className="w-full aspect-[3/1] bg-gray-100 dark:bg-gray-700 border flex items-center justify-center text-gray-400">
+                                            <div className="w-full aspect-3/1 bg-gray-100 dark:bg-gray-700 border flex items-center justify-center text-gray-400">
                                                 {t('noImage')}
                                             </div>
                                         )}
