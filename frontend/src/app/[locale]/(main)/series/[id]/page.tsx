@@ -119,10 +119,10 @@ export default function SeriesDetailPage() {
 
                     {/* Info */}
                     <div className="grow pt-4 md:pt-32 text-center md:text-left">
-                        <h1 className="text-3xl md:text-4xl font-bold text-white md:text-gray-900 md:dark:text-white mt-4 mb-2 shadow-black md:shadow-none drop-shadow-md md:drop-shadow-none">
+                        <h1 className="text-2xl md:text-4xl font-bold text-white md:text-gray-900 md:dark:text-white mt-4 mb-2 shadow-black md:shadow-none drop-shadow-md md:drop-shadow-none">
                             {getLocalizedText(series.title)}
                         </h1>
-                        <p className="text-lg text-gray-200 md:text-gray-600 md:dark:text-gray-300 mb-4 font-medium">
+                        <p className="text-sm text-gray-200 md:text-gray-600 md:dark:text-gray-300 mb-4 font-medium">
                             {getLocalizedText(series.description)}
                         </p>
 

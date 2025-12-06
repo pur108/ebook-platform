@@ -8,6 +8,7 @@ interface User {
     id: string;
     email: string;
     role: 'user' | 'creator' | 'admin';
+    username: string;
     profile_image?: string;
 }
 

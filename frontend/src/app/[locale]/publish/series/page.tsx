@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import { useAuth } from "@/context/auth-context";
@@ -14,6 +14,12 @@ export default function PublishSeriesPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [activeTab, setActiveTab] = useState<'en' | 'th'>('en');
+
+    useEffect(() => {
+        if (user && user.username) {
+            setFormData(prev => ({ ...prev, author: user.username }));
+        }
+    }, [user]);
 
     const [formData, setFormData] = useState({
         title: { en: "", th: "" },
@@ -151,7 +157,7 @@ export default function PublishSeriesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#FAF9F6] dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
+        <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
             <Navbar />
             <main className="max-w-7xl mx-auto px-16">
                 {/* <h1 className="text-3xl font-bold mb-8">{t('create')}</h1> */}
@@ -257,16 +263,10 @@ export default function PublishSeriesPage() {
                                             className="w-full px-3 py-2 border dark:bg-gray-700 dark:border-gray-600"
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">{t('author')}</label>
-                                        <input
-                                            type="text"
-                                            name="author"
-                                            value={formData.author}
-                                            onChange={handleChange}
-                                            className="w-full px-3 py-2 border dark:bg-gray-700 dark:border-gray-600"
-                                        />
-                                    </div>
+
+                                    {/* ... existing code ... */}
+
+
 
                                     {/* Genres */}
                                     <div>
